@@ -44,7 +44,10 @@
                <children>
                   <VBox prefHeight="225.0" prefWidth="238.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Setup" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Setup">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Text>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Algorithm" />
@@ -85,7 +88,10 @@
                   </VBox>
                   <VBox prefHeight="270.0" prefWidth="238.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Controls" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Controls">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Text>
                         <HBox prefHeight="75.0" prefWidth="200.0" spacing="10.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Process" />
@@ -127,7 +133,7 @@
                         <Insets top="35.0" />
                      </padding>
                   </VBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="70.0" prefWidth="200.0">
                      <children>
                         <Button mnemonicParsing="false" prefWidth="59.0" text="Remove" />
                      </children>
@@ -147,8 +153,11 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="300.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Memory" />
-                  <BarChart prefHeight="450.0" prefWidth="288.0">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Memory">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Text>
+                  <BarChart prefHeight="475.0" prefWidth="288.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -160,9 +169,12 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="250.0">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox prefHeight="250.0" prefWidth="100.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stats" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Text>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
@@ -174,13 +186,16 @@
                   </VBox>
                   <VBox prefHeight="230.0" prefWidth="238.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Text>
                         <TextArea fx:id="outputArea" prefHeight="200.0" prefWidth="200.0">
                            <padding>
                               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                            </padding>
                            <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                            </VBox.margin></TextArea>
                      </children>
                      <padding>
