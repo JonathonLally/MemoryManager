@@ -46,7 +46,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Setup">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Text>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -61,6 +61,11 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Memory" />
                               <TextField fx:id="totalMemoryField" prefWidth="50.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                                 <HBox.margin>
+                                    <Insets left="-5.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                            <padding>
                               <Insets top="10.0" />
@@ -70,6 +75,11 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size of OS" />
                               <TextField fx:id="osSizeField" prefWidth="50.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                                 <HBox.margin>
+                                    <Insets left="-25.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                            <padding>
                               <Insets top="10.0" />
@@ -90,7 +100,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Controls">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Text>
                         <HBox prefHeight="75.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -105,6 +115,11 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Process Size" />
                               <TextField fx:id="processSizeField" prefWidth="50.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                                 <HBox.margin>
+                                    <Insets left="-7.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                            <padding>
                               <Insets top="10.0" />
@@ -112,7 +127,7 @@
                         </HBox>
                         <HBox prefHeight="75.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" prefWidth="59.0" text="Add">
+                              <Button mnemonicParsing="false" onAction="#checkProcess" prefWidth="59.0" text="Add">
                                  <HBox.margin>
                                     <Insets left="75.0" top="5.0" />
                                  </HBox.margin>
@@ -135,7 +150,7 @@
                   </VBox>
                   <HBox prefHeight="70.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" prefWidth="59.0" text="Remove" />
+                        <Button mnemonicParsing="false" onAction="#removeProcess" prefWidth="59.0" text="Remove" />
                      </children>
                      <VBox.margin>
                         <Insets left="75.0" top="10.0" />
@@ -143,7 +158,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="compactMemoryButton" mnemonicParsing="false" onAction="#CompactMemory" text="Compact" />
+                        <Button fx:id="compactMemoryButton" mnemonicParsing="false" onAction="#compactMemory" text="Compact" />
                      </children>
                      <padding>
                         <Insets left="75.0" top="10.0" />
@@ -151,18 +166,18 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="300.0">
+            <VBox fx:id="memoryBox" prefHeight="200.0" prefWidth="300.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Memory">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font></Text>
-                  <BarChart prefHeight="475.0" prefWidth="288.0">
+                  <BarChart fx:id="memChart" prefHeight="475.0" prefWidth="288.0">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <CategoryAxis side="BOTTOM" fx:id="xAxis" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                      <NumberAxis fx:id="yAxis" side="LEFT" />
                     </yAxis>
                   </BarChart>
                </children>
@@ -173,7 +188,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Text>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                         <HBox prefHeight="100.0" prefWidth="200.0">
@@ -188,7 +203,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Text>
                         <TextArea fx:id="outputArea" prefHeight="200.0" prefWidth="200.0">
                            <padding>
