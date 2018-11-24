@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,7 +30,7 @@ public class MainViewController {
     @FXML    private Button compactMemoryButton;
     @FXML    private TextArea outputArea;
     @FXML    private VBox memoryBox;
-    @FXML    private BarChart memChart;
+    @FXML    private StackedBarChart memChart;
     @FXML    private CategoryAxis xAxis;
     @FXML    private NumberAxis yAxis;
 
@@ -43,6 +41,7 @@ public class MainViewController {
     private ArrayList<String> processesRemoveable;
     private int freeMemory;
     private int usedMemory;
+    private XYChart.Series[] seriesArr = new XYChart.Series[9];
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private MemSim memsim;
 
@@ -95,15 +94,17 @@ public class MainViewController {
     private void addProcess(ActionEvent event) {        //Checks checkProcess field for proper int value
         try {
             int parsed = Integer.parseInt(processSizeField.getText());
-            if (processSizeInvalid(parsed)) {
+
+            if (processSizeInvalid(parsed))
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
-            }
             else {
                 setOutputArea("Process check " + parsed);   //Valid Process Input
-                new MemProcess(getProcessId(), parsed);
+                new MemProcess(getProcessId_Add(), parsed);
                 //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
-                swapLists(getProcessId(), 0);
-                swapComboBox(getProcessId(), 0);
+                String processId = getProcessId_Add();
+                swapLists(processId, 0);
+                swapComboBox(processId, 0);
+                addProcessToChart(Integer.parseInt(processId.substring(processId.length() - 1)), parsed);
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -114,7 +115,11 @@ public class MainViewController {
 
     @FXML
     void removeProcess(ActionEvent event) {
+        String processId = getProcessId_Remove();
 
+        removeProcessFromChart(Integer.parseInt(processId.substring(processId.length() - 1)));
+        swapLists(processId, 1);
+        swapComboBox(processId, 1);
     }
 
     @FXML
@@ -161,9 +166,11 @@ public class MainViewController {
         return algorithmComboBox.getValue();
     }
 
-    private String getProcessId() {
+    private String getProcessId_Add() {
         return addProcessComboBox.getValue();
     }
+
+    private String getProcessId_Remove() { return removeProcessComboBox.getValue(); }
 
     private int getTotalMemory() {          //Gets value from totalMemory size TextField
         try {
@@ -196,8 +203,18 @@ public class MainViewController {
         }
         return 0;
     }
-    private void initMemChart() {
 
+    private void initMemChart() {
+        seriesArr[0] = new XYChart.Series();
+        seriesArr[0].setName("OS");
+        memChart.getData().add(seriesArr[0]);
+
+        for(int i = 1; i < seriesArr.length; i++) {
+            seriesArr[i] = new XYChart.Series();
+            seriesArr[i].setName("Process " + i);
+            memChart.getData().add(seriesArr[i]);
+        }
+        addProcessToChart(0, Integer.parseInt(osSizeField.getText()));
     }
 
     private void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
@@ -242,49 +259,61 @@ public class MainViewController {
 
     //Swaps a process from one List to another. If signal = 0, available -> removable. Else, removable -> available
     private void swapLists(String processId, int signal) {
-        if(signal == 0) {
-            processesAvailable.remove(processId);
-            processesRemoveable.add(processId);
-        } else {
-            processesRemoveable.remove(processId);
-            processesAvailable.add(processId);
+        if(processId != null) {
+            if (signal == 0) {
+                processesAvailable.remove(processId);
+                processesRemoveable.add(processId);
+            } else {
+                processesRemoveable.remove(processId);
+                processesAvailable.add(processId);
+            }
         }
     }
 
     //Swaps a process from one ComboBox to another. If signal = 0, addProcess -> removeProcess. Else, removeProcess -> addProcess
     private void swapComboBox(String processId, int signal) {
-        if(signal == 0) {
-            //selectNextAvailableOption(addProcessComboBox.getItems().size(), 0);
-            addProcessComboBox.getItems().remove(processId);
-            removeProcessComboBox.getItems().add(processId);
-            removeProcessComboBox.getSelectionModel().select(removeProcessComboBox.getItems().size() - 1);
-        } else {
-            //selectNextAvailableOption(removeProcessComboBox.getItems().size(), 1);
-            removeProcessComboBox.getItems().remove(processId);
-            addProcessComboBox.getItems().add(processId);
-            addProcessComboBox.getSelectionModel().select(addProcessComboBox.getItems().size() - 1);
+        if(processId != null) {
+            if (signal == 0) {
+                selectNextAvailableOption(addProcessComboBox.getItems().size(), 0);
+                addProcessComboBox.getItems().remove(processId);
+                removeProcessComboBox.getItems().add(processId);
+                removeProcessComboBox.getSelectionModel().select(removeProcessComboBox.getItems().size() - 1);
+            } else {
+                selectNextAvailableOption(removeProcessComboBox.getItems().size(), 1);
+                removeProcessComboBox.getItems().remove(processId);
+                addProcessComboBox.getItems().add(processId);
+                addProcessComboBox.getSelectionModel().select(addProcessComboBox.getItems().size() - 1);
+            }
         }
+
+        //Integrated sorting for addProcessComboBox since removeProcess -> addProcess causes the list to go in reverse
+        //NOTE: No two elements are ever equal, such that accounting for that case is unnecessary
+        addProcessComboBox.getItems().sort((o1, o2) -> {
+            int i1 = Integer.parseInt(o1.substring(o1.length() - 1)), i2 = Integer.parseInt(o2.substring(o2.length() - 1));
+
+            if(i1 > i2)
+                return 1;
+            else
+                return -1;
+        });
     }
 
-    // !! CURRENTLY RESULTS IN AN ERROR !!
-
     //Selects next available option since the selected option was removed. If signal = 0, do it for addProcess. Else, do it for removeProcess
-    /*private void selectNextAvailableOption(int size, int signal) {
-        if(signal == 0) {
-            if(addProcessComboBox.getItems().get(size + 1) != null)
-                addProcessComboBox.getSelectionModel().selectNext();
-            else if(addProcessComboBox.getItems().get(size - 1) != null)
-                addProcessComboBox.getSelectionModel().selectPrevious();
-            else
-                addProcessComboBox.getSelectionModel().selectFirst();
-        } else {
-            if(removeProcessComboBox.getItems().get(size + 1) != null)
-                removeProcessComboBox.getSelectionModel().selectNext();
-            else if(removeProcessComboBox.getItems().get(size - 1) != null)
-                removeProcessComboBox.getSelectionModel().selectPrevious();
-            else
-                removeProcessComboBox.getSelectionModel().selectFirst();
-        }
-    }*/
+    private void selectNextAvailableOption(int size, int signal) {
+        if(signal == 0 && size != 1)
+            addProcessComboBox.getSelectionModel().selectNext();
+        else if (size != 1)
+            removeProcessComboBox.getSelectionModel().selectNext();
+    }
+
+    //Adds a process to the BarGraph
+    private void addProcessToChart(int index, int size) {
+        seriesArr[index].getData().add(new XYChart.Data("", size));
+    }
+
+    //Removes a process from the BarGraph
+    private void removeProcessFromChart(int index) {
+        seriesArr[index].getData().remove(0);
+    }
 
 }
