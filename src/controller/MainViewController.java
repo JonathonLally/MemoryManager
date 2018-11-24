@@ -46,10 +46,17 @@ public class MainViewController {
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private MemSim memsim;
 
+    //Final Vars
+    private final int
+            OS_MIN = 512,
+            OS_MAX = 2048,
+            PROCESS_MIN = 1,
+            PROCESS_MAX = 16384;
+
     //FXML Methods
 
     @FXML
-    void initialize() {         //Initializes MainView
+    public void initialize() {         //Initializes MainView
         setOutputArea("Memory Manager Sim Started");
         algorithmComboBox.getItems().addAll("First Fit", "Best Fit","Worst Fit");
         algorithmComboBox.getSelectionModel().select(0);
@@ -66,7 +73,7 @@ public class MainViewController {
 
     }
     @FXML
-    void compactMemory(ActionEvent event) {
+    private void compactMemory(ActionEvent event) {
 
 
     }
@@ -77,7 +84,7 @@ public class MainViewController {
     }
 
     @FXML
-    void setDefaultValues() {                       //Sets default values for GUI text fields
+    private void setDefaultValues() {                       //Sets default values for GUI text fields
         totalMemoryField.setText("8192");
         osSizeField.setText("1024");
         processSizeField.setText("512");
@@ -85,17 +92,18 @@ public class MainViewController {
 
 
     @FXML
-    void addProcess(ActionEvent event) {        //Checks checkProcess field for proper int value
+    private void addProcess(ActionEvent event) {        //Checks checkProcess field for proper int value
         try {
             int parsed = Integer.parseInt(processSizeField.getText());
-            if (parsed < 1 || parsed > 16384) {
+            if (processSizeInvalid(parsed)) {
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
             }
             else {
                 setOutputArea("Process check " + parsed);   //Valid Process Input
                 new MemProcess(getProcessId(), parsed);
                 //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
-
+                swapLists(getProcessId(), 0);
+                swapComboBox(getProcessId(), 0);
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -111,15 +119,15 @@ public class MainViewController {
 
     @FXML
     void CreateMemorySim(ActionEvent event) {
-        if (getAlgorithmType() == "First Fit") {
+        if (getAlgorithmType().equals("First Fit")) {
             setOutputArea("Creating First Fit Sim");
             memsim = new FirstFitSim(getTotalMemory(), getOSMemory());
         }
-        else if (getAlgorithmType() == "Best Fit") {
+        else if (getAlgorithmType().equals("Best Fit")) {
             setOutputArea("Creating Best Fit Sim");
             memsim = new BestFitSim(getTotalMemory(), getOSMemory());
         }
-        else if (getAlgorithmType() == "Worst Fit") {
+        else if (getAlgorithmType().equals("Worst Fit")) {
             setOutputArea("Creating Worst Fit Sim");
             memsim = new WorstFitSim(getTotalMemory(), getOSMemory());
         }
@@ -135,7 +143,6 @@ public class MainViewController {
         setOutputArea("Application Reset");
         setDefaultValues();
         memsim = null;
-
     }
 
     @FXML
@@ -162,7 +169,7 @@ public class MainViewController {
         try {
             int parsed = Integer.parseInt(totalMemoryField.getText());
 
-            if(parsed < 4096 || parsed > 16384) {
+            if(processSizeInvalid(parsed)) {
                 displayError("Total Memory Out of Range", "Please enter an integer between 4096 and 16384");
             }
             else {
@@ -178,7 +185,7 @@ public class MainViewController {
         try {
             int parsed = Integer.parseInt(osSizeField.getText());
 
-            if(parsed < 512 || parsed > 2048) {
+            if(osSizeInvalid(parsed)) {
                 displayError("OS Memory Out of Range", "Please enter an integer between 512 and 2048");
             }
             else {
@@ -222,5 +229,62 @@ public class MainViewController {
         error.setContentText(content);
         error.showAndWait();
     }
+
+    //Checks if a requested Process size is out-of-bounds
+    private boolean processSizeInvalid(int requestedSize) {
+        return requestedSize < PROCESS_MIN || requestedSize > PROCESS_MAX;
+    }
+
+    //Checks if a requested OS size is out-of-bounds
+    private boolean osSizeInvalid(int requestedSize) {
+        return requestedSize < OS_MIN || requestedSize > OS_MAX;
+    }
+
+    //Swaps a process from one List to another. If signal = 0, available -> removable. Else, removable -> available
+    private void swapLists(String processId, int signal) {
+        if(signal == 0) {
+            processesAvailable.remove(processId);
+            processesRemoveable.add(processId);
+        } else {
+            processesRemoveable.remove(processId);
+            processesAvailable.add(processId);
+        }
+    }
+
+    //Swaps a process from one ComboBox to another. If signal = 0, addProcess -> removeProcess. Else, removeProcess -> addProcess
+    private void swapComboBox(String processId, int signal) {
+        if(signal == 0) {
+            //selectNextAvailableOption(addProcessComboBox.getItems().size(), 0);
+            addProcessComboBox.getItems().remove(processId);
+            removeProcessComboBox.getItems().add(processId);
+            removeProcessComboBox.getSelectionModel().select(removeProcessComboBox.getItems().size() - 1);
+        } else {
+            //selectNextAvailableOption(removeProcessComboBox.getItems().size(), 1);
+            removeProcessComboBox.getItems().remove(processId);
+            addProcessComboBox.getItems().add(processId);
+            addProcessComboBox.getSelectionModel().select(addProcessComboBox.getItems().size() - 1);
+        }
+    }
+
+    // !! CURRENTLY RESULTS IN AN ERROR !!
+
+    //Selects next available option since the selected option was removed. If signal = 0, do it for addProcess. Else, do it for removeProcess
+    /*private void selectNextAvailableOption(int size, int signal) {
+        if(signal == 0) {
+            if(addProcessComboBox.getItems().get(size + 1) != null)
+                addProcessComboBox.getSelectionModel().selectNext();
+            else if(addProcessComboBox.getItems().get(size - 1) != null)
+                addProcessComboBox.getSelectionModel().selectPrevious();
+            else
+                addProcessComboBox.getSelectionModel().selectFirst();
+        } else {
+            if(removeProcessComboBox.getItems().get(size + 1) != null)
+                removeProcessComboBox.getSelectionModel().selectNext();
+            else if(removeProcessComboBox.getItems().get(size - 1) != null)
+                removeProcessComboBox.getSelectionModel().selectPrevious();
+            else
+                removeProcessComboBox.getSelectionModel().selectFirst();
+        }
+    }*/
 
 }
