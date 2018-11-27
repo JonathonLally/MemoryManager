@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -172,14 +170,7 @@
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font></Text>
-                  <StackedBarChart fx:id="memChart" prefHeight="482.0" prefWidth="288.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" fx:id="xAxis" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis fx:id="yAxis" autoRanging="false" minorTickCount="3" side="LEFT" tickUnit="512.0" upperBound="8192.0" />
-                    </yAxis>
-                  </StackedBarChart>
+                  <ListView fx:id="memChart" prefHeight="482.0" prefWidth="288.0" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="250.0">

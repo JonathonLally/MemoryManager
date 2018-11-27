@@ -12,6 +12,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.*;
 
 import java.util.*;
@@ -30,18 +31,16 @@ public class MainViewController {
     @FXML    private Button compactMemoryButton;
     @FXML    private TextArea outputArea;
     @FXML    private VBox memoryBox;
-    @FXML    private StackedBarChart memChart;
-    @FXML    private CategoryAxis xAxis;
-    @FXML    private NumberAxis yAxis;
+    @FXML    private ListView<String> memChart;
 
     //Variables
     private ObservableList<String> processAvailableList;     //Keeps track of what processes are available
     private ObservableList<String> processRemoveableList;    //Processes that can be removed
     private ArrayList<String> processesAvailable;
     private ArrayList<String> processesRemoveable;
+    private ArrayList<MemProcess> pList;
     private int freeMemory;
     private int usedMemory;
-    private XYChart.Series[] seriesArr = new XYChart.Series[9];
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private MemSim memsim;
 
@@ -64,6 +63,7 @@ public class MainViewController {
         processesAvailable = new ArrayList<>(Arrays.asList("Process 1", "Process 2", "Process 3", "Process 4",
                 "Process 5", "Process 6", "Process 7", "Process 8"));
         processesRemoveable = new ArrayList<>();
+        pList = new ArrayList<>();
         addProcessComboBox.setItems(processAvailableList);
         addProcessComboBox.getSelectionModel().select(0);
         setDefaultValues();
@@ -99,12 +99,13 @@ public class MainViewController {
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
             else {
                 setOutputArea("Process check " + parsed);   //Valid Process Input
-                new MemProcess(getProcessId_Add(), parsed);
+                MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
+                pList.add(temp);
                 //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
                 swapComboBox(processId, 0);
-                addProcessToChart(Integer.parseInt(processId.substring(processId.length() - 1)), parsed);
+                addProcessToChart(Integer.parseInt(processId.substring(processId.length() - 1)), temp);
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -205,17 +206,36 @@ public class MainViewController {
     }
 
     private void initMemChart() {
-        seriesArr[0] = new XYChart.Series();
-        seriesArr[0].setName("OS");
-        memChart.getData().add(seriesArr[0]);
+        memChart.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
 
-        for(int i = 1; i < seriesArr.length; i++) {
-            seriesArr[i] = new XYChart.Series();
-            seriesArr[i].setName("Process " + i);
-            memChart.getData().add(seriesArr[i]);
-        }
-        addProcessToChart(0, Integer.parseInt(osSizeField.getText()));
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle("-fx-control-inner-background: derive(#000000,80%);"); //default
+                        } else {
+                            setText(item);
+                            if (item.startsWith("H")) {
+                                setStyle("-fx-control-inner-background: derive(#ffffff,80%);");
+                            } else if (item.startsWith("O")) {
+                                setStyle("-fx-control-inner-background: derive(#000000,80%);");
+                            } else {
+                                setStyle("-fx-control-inner-background: derive(#ff00ff,80%);"); //variable colors go here
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        pList.add(new MemProcess("OS", Integer.parseInt(osSizeField.getText())));
+        memChart.getItems().add(0, "OS\n" + "(" + osSizeField.getText() + "KB)");
     }
+
 
     private void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
         try {
@@ -307,13 +327,14 @@ public class MainViewController {
     }
 
     //Adds a process to the BarGraph
-    private void addProcessToChart(int index, int size) {
-        seriesArr[index].getData().add(new XYChart.Data("", size));
+    private void addProcessToChart(int index, MemProcess mp) {
+        memChart.getItems().add(index, mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
     }
 
     //Removes a process from the BarGraph
     private void removeProcessFromChart(int index) {
-        seriesArr[index].getData().remove(0);
+        memChart.getItems().remove(index);
+        addProcessToChart(index, new MemProcess("HOLE", pList.get(index).getpSize()));
     }
 
 }
