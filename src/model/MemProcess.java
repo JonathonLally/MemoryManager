@@ -23,5 +23,20 @@ public class MemProcess {
     public MemProcess(String pID, int pSize) {
         this.pID = pID;
         this.pSize = pSize;
+        setmemID();
+    }
+
+    private void setmemID() {
+        try {
+            String[] temp = pID.split(" ");
+            memId = Integer.parseInt(temp[1]);
+        } catch (Exception e) {
+            memId = 9;              //OS CORRECT
+        }
+    }
+
+
+    public int getmemID() {
+        return memId;
     }
 }

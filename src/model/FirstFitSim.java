@@ -1,7 +1,26 @@
 package model;
 
+import java.util.ArrayList;
+
 public class FirstFitSim extends MemSim {
     public FirstFitSim(int totalMemory, int osMemory) {
         super(totalMemory, osMemory);
     }
+
+    public void insertProcess(MemProcess insert) {
+        System.out.println("Attempting to add Process");
+        int size = insert.getpSize();
+        ArrayList<Hole> holeList = findHoles();
+        System.out.println(holeList.toString());
+
+        for (Hole ho : holeList) {
+            if (ho.getSize() >= insert.getpSize()) {
+                System.out.println("Proper Hole Found");
+                addToMemory(ho.getStart(), insert.getpSize(), insert.getmemID());
+                break;
+            }
+        }
+
+    }
+
 }

@@ -68,12 +68,13 @@ public class MainViewController {
         addProcessComboBox.getSelectionModel().select(0);
         setDefaultValues();
         initMemChart();
-        //memoryBox.getChildren(memChart);    //TODO add Graphic Here
 
     }
     @FXML
     private void compactMemory(ActionEvent event) {
-
+            //TODO TEMP USING BUTTON FOR TESTING
+        System.out.println(memsim.findHoles().toString());
+        memsim.printMemory();
 
     }
 
@@ -99,9 +100,10 @@ public class MainViewController {
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
             else {
                 setOutputArea("Process check " + parsed);   //Valid Process Input
+
                 MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
+                memsim.insertProcess(temp);
                 pList.add(temp);
-                //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
                 swapComboBox(processId, 0);
@@ -116,7 +118,13 @@ public class MainViewController {
 
     @FXML
     void removeProcess(ActionEvent event) {
+
         String processId = getProcessId_Remove();
+        for (MemProcess memP : pList) {
+            if (processId == memP.getpID()) {
+                memsim.removeProcess(memP.getmemID());
+            }
+        }
 
         removeProcessFromChart(Integer.parseInt(processId.substring(processId.length() - 1)));
         swapLists(processId, 1);
