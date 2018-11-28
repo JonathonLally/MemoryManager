@@ -33,6 +33,10 @@ public class MainViewController {
     @FXML    private TextArea outputArea;
     @FXML    private VBox memoryBox;
     @FXML    private ListView<String> memChart;
+    @FXML    private TextField statsTotal;
+    @FXML    private TextField statsFree;
+    @FXML    private TextField statsPercent;
+    @FXML    private Button statsPrint;
 
     //Variables
     private ObservableList<String> processAvailableList;     //Keeps track of what processes are available
@@ -40,8 +44,6 @@ public class MainViewController {
     private ArrayList<String> processesAvailable;
     private ArrayList<String> processesRemoveable;
     private ArrayList<MemProcess> pList;
-    private int freeMemory;
-    private int usedMemory;
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private MemSim memsim;
 
@@ -69,18 +71,10 @@ public class MainViewController {
         addProcessComboBox.getSelectionModel().select(0);
         setDefaultValues();
         initMemChart();
-        //memoryBox.getChildren(memChart);    //TODO add Graphic Here
 
     }
     @FXML
     private void compactMemory(ActionEvent event) {
-
-
-    }
-
-    @FXML
-    private void updateListViews() {
-
     }
 
     @FXML
@@ -99,8 +93,8 @@ public class MainViewController {
             if (processSizeInvalid(parsed))
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
             else {
-                setOutputArea("Process check " + parsed);   //Valid Process Input
                 MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
+                memsim.insertProcess(temp);
                 pList.add(temp);
                 System.out.println(pList.size());
                 //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
@@ -118,8 +112,16 @@ public class MainViewController {
 
     @FXML
     void removeProcess(ActionEvent event) {
+
         String processId = getProcessId_Remove();
+        for (MemProcess memP : pList) {
+            if (processId == memP.getpID()) {
+                memsim.removeProcess(memP.getmemID());
+            }
+        }
+
         MemProcess temp = null;
+
 
         for(int i = 0; i < pList.size(); i++)
             if(pList.get(i).getpID().equals(processId))
@@ -136,14 +138,17 @@ public class MainViewController {
         if (getAlgorithmType().equals("First Fit")) {
             setOutputArea("Creating First Fit Sim");
             memsim = new FirstFitSim(getTotalMemory(), getOSMemory());
+            outputArea.appendText("\nTotal size of " + getTotalMemory());
         }
         else if (getAlgorithmType().equals("Best Fit")) {
             setOutputArea("Creating Best Fit Sim");
             memsim = new BestFitSim(getTotalMemory(), getOSMemory());
+            outputArea.appendText("\nTotal size of " + getTotalMemory());
         }
         else if (getAlgorithmType().equals("Worst Fit")) {
             setOutputArea("Creating Worst Fit Sim");
             memsim = new WorstFitSim(getTotalMemory(), getOSMemory());
+            outputArea.appendText("\nTotal size of " + getTotalMemory());
         }
         else {
             setOutputArea("Error with CreateMemorySim()");
@@ -153,10 +158,14 @@ public class MainViewController {
 
     @FXML
     void ResetMemory(ActionEvent event) {                           //Resets Application
-        algorithmComboBox.getSelectionModel().select(0);
-        setOutputArea("Application Reset");
-        setDefaultValues();
+        processAvailableList.clear();
+        processesAvailable.clear();
+        processesRemoveable.clear();
+        pList.clear();
+        addProcessComboBox.setItems(null);
+        removeProcessComboBox.setItems(null);
         memsim = null;
+        initialize();
     }
 
     @FXML
@@ -164,12 +173,14 @@ public class MainViewController {
         Platform.exit();
     }
 
-
+    @FXML
+    void printMemoryArray(ActionEvent event) {
+        System.out.println(memsim.findHoles().toString());
+        memsim.printMemory();
+        System.out.println(memsim.getProcessList().toString());
+    }
 
     //Methods
-    private void switchProcessView(String process) {     //Switches process from add listview to remove and vice versa
-    
-    }
 
     private String getAlgorithmType() {     //Gets Algorithm Choice from ComboBox
         return algorithmComboBox.getValue();
@@ -260,7 +271,6 @@ public class MainViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AboutView.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            //scene.getStylesheets().add(getClass().getResource("/resources/material-fx-v0_3.css").toExternalForm());
             thirdStage.setScene(scene);
             thirdStage.show();
 
