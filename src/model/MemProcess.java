@@ -3,6 +3,31 @@ package model;
 public class MemProcess {
     private String pID;
     private int pSize;
+    private int startLocation;
+    private int endLocation;
+    private int memId;
+
+    public MemProcess(String pID, int pSize) {
+        this.pID = pID;
+        this.pSize = pSize;
+        setmemID();
+    }
+
+    public int getStartLocation() {
+        return startLocation;
+    }
+
+    public void setStartLocation(int startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    public int getEndLocation() {
+        return endLocation;
+    }
+
+    public void setEndLocation(int endLocation) {
+        this.endLocation = endLocation;
+    }
 
     public String getpID() {
         return pID;
@@ -29,12 +54,6 @@ public class MemProcess {
 
     public void setpSize(int pSize) {
         this.pSize = pSize;
-    }
-
-    public MemProcess(String pID, int pSize) {
-        this.pID = pID;
-        this.pSize = pSize;
-        setmemID();
     }
 
     private void setmemID() {

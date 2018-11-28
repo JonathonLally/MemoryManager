@@ -1,6 +1,8 @@
 package model;
 
-public class MemSim {
+import java.util.ArrayList;
+
+public abstract class MemSim {
 
     protected int totalSize;
     protected int freeMemory;
@@ -13,6 +15,34 @@ public class MemSim {
     public MemSim(int totalSize, int osSize) {
         this.totalSize = totalSize;
         this.osSize = osSize;
+        memory = new int[totalSize];
+        processList = new ArrayList<MemProcess>();
+        waitList = new ArrayList<MemProcess>();
+        freeMemory = totalSize - osSize;
+        usedMemory = osSize;
+        insertOS();
+    }
+
+    public ArrayList<MemProcess> getProcessList() {
+        return processList;
+    }
+
+    public ArrayList<MemProcess> getWaitList() {
+        return waitList;
+    }
+
+    public void removeProcess(int id) {
+        for (int i = 0; i <memory.length; i++) {
+            if (memory[i] == id) {
+                memory[i] = 0;
+            }
+        }
+        for (MemProcess mem : processList) {
+            if (mem.getmemID() == id) {
+                processList.remove(mem);
+            }
+        }
+
     }
 
     public void insertOS() {
