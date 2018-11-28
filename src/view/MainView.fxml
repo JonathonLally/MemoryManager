@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="900.0">
         <menus>
@@ -175,19 +175,40 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="250.0">
                <children>
-                  <VBox prefHeight="250.0" prefWidth="100.0">
+                  <VBox prefHeight="230.0" prefWidth="238.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font></Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Average Wait" />
-                              <TextField editable="false" maxWidth="50.0" prefWidth="50.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Memory" />
+                              <TextField fx:id="statsTotal" editable="false" maxWidth="50.0" prefWidth="50.0" />
                            </children>
                         </HBox>
+                        <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Free Memory" />
+                              <TextField fx:id="statsFree" maxWidth="50.0">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></TextField>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Percent Used" />
+                              <TextField fx:id="statsPercent" editable="false" maxWidth="50.0" prefWidth="50.0">
+                                 <HBox.margin>
+                                    <Insets left="7.0" />
+                                 </HBox.margin></TextField>
+                           </children>
+                        </HBox>
+                        <Button fx:id="statsPrint" mnemonicParsing="false" onAction="#printMemoryArray" text="Print Array">
+                           <VBox.margin>
+                              <Insets left="50.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox prefHeight="230.0" prefWidth="238.0">
@@ -202,7 +223,10 @@
                            </padding>
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
-                           </VBox.margin></TextArea>
+                           </VBox.margin>
+                           <font>
+                              <Font size="10.0" />
+                           </font></TextArea>
                      </children>
                      <padding>
                         <Insets top="25.0" />

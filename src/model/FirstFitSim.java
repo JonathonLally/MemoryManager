@@ -7,52 +7,28 @@ public class FirstFitSim extends MemSim {
         super(totalMemory, osMemory);
     }
 
-    public boolean canAllocate(ArrayList<MemProcess> pList, MemProcess mp, int totalMemory) {
-        int sum = 0;
-        int freeMemory, adjacentFreeMemory;
-        int[] holeMap = new int[pList.size()];
-        MemProcess temp;
+    public void insertProcess(MemProcess insert) {
+        System.out.println("Attempting to add Process");
+        int size = insert.getpSize();
+        ArrayList<Hole> holeList = findHoles();
+        System.out.println(holeList.toString());
 
-        for(int i = 0; i < pList.size(); i++) {
-            temp = pList.get(i);
-
-            if (!temp.getpID().equals("HOLE"))
-                sum += temp.getpSize();
+        for (Hole ho : holeList) {
+            if (ho.getSize() >= insert.getpSize()) {
+                System.out.println("Proper Hole Found");
+                addToMemory(ho.getStart(), insert.getpSize(), insert.getmemID());
+                insert.setStartLocation(ho.getStart());
+                insert.setEndLocation(ho.getStart() + insert.getpSize());
+                processList.add(insert);
+                System.out.println("Process added at " + insert.getStartLocation() + " with size of " + insert.getpSize());
+                break;
+            }
             else {
-                holeMap[i] = 1;
+                System.out.println("Process won't fit, adding to Waitlist");
+                waitList.add(insert);
             }
         }
 
-
-        freeMemory = totalMemory - sum;
-
-        if (freeMemory < mp.getpSize())
-            return false;
-
-        if(freeMemory < (1/8) * (totalMemory * 1.0)) {
-            for (int i = 0; i < pList.size(); i++) {
-                temp = pList.get(i);
-
-                if (temp.getpID().equals("HOLE")) {
-                    if (pList.get(i).getpSize() > mp.getpSize())
-                        return true;
-                    else {
-                        adjacentFreeMemory = 0;
-
-                        for (int j = i + 1; j < pList.size() - 1; j++)
-                            if (holeMap[j] == 1)
-                                adjacentFreeMemory += pList.get(i).getpSize() + pList.get(j).getpSize();
-                            else
-                                break;
-                    }
-
-                    if (adjacentFreeMemory > mp.getpSize())
-                        return true;
-                }
-            }
-        }
-
-
-         return false;
     }
+
 }
