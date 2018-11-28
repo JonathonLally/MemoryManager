@@ -343,13 +343,49 @@ public class MainViewController {
         memChart.getItems().add(mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
     }
 
+    private void consolidateHoles(int index, MemProcess mp) {
+
+        if (index == 1) {
+            if (pList.get(index + 1).getpID().equals("HOLE")) {
+                mp.setpSize(mp.getpSize() + pList.get(index + 1).getpSize());
+                memChart.getItems().remove(index + 1);
+                pList.remove(index + 1);
+            }
+        } else if (index == pList.size() - 1) {
+            if (pList.get(index - 1).getpID().equals("HOLE")) {
+                mp.setpSize(mp.getpSize() + pList.get(index - 1).getpSize());
+                memChart.getItems().remove(index - 1);
+                pList.remove(index - 1);
+                index--;
+            }
+        } else {
+            if (pList.get(index + 1).getpID().equals("HOLE")) {
+                System.out.println("If statement #2 tripped");
+                mp.setpSize(mp.getpSize() + pList.get(index + 1).getpSize());
+                memChart.getItems().remove(index + 1);
+                pList.remove(index + 1);
+            }
+            if (pList.get(index - 1).getpID().equals("HOLE")) {
+                System.out.println("If statement #1 tripped");
+                mp.setpSize(mp.getpSize() + pList.get(index - 1).getpSize());
+                memChart.getItems().remove(index - 1);
+                pList.remove(index - 1);
+                index--;
+            }
+        }
+
+        pList.remove(index);
+        memChart.getItems().remove(index);
+        pList.add(index, mp);
+        addProcessToChart(index, mp);
+        pList.trimToSize();
+    }
+
     //Removes a process from the BarGraph and replaces it with a hole
     private void removeProcessFromChart(MemProcess mp, int size) {
         MemProcess hole = new MemProcess("HOLE", size);
         int index = pList.indexOf(mp);
-
-        pList.set(index, hole);
-        memChart.getItems().set(index, hole.getpID() + "\n" + "(" + hole.getpSize() + "KB)");
+        consolidateHoles(index, hole);
     }
 
 }
