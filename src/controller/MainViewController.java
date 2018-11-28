@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
@@ -95,11 +96,12 @@ public class MainViewController {
                 MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
                 memsim.insertProcess(temp);
                 pList.add(temp);
+                System.out.println(pList.size());
+                //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
                 swapComboBox(processId, 0);
-                addProcessToChart(Integer.parseInt(processId.substring(processId.length() - 1)), temp);
-                setOutputArea("Process Added \n" + temp.toString());
+                addProcessToChart(temp);
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -118,7 +120,15 @@ public class MainViewController {
             }
         }
 
-        removeProcessFromChart(Integer.parseInt(processId.substring(processId.length() - 1)));
+        MemProcess temp = null;
+
+
+        for(int i = 0; i < pList.size(); i++)
+            if(pList.get(i).getpID().equals(processId))
+                temp = pList.get(i);
+
+
+        removeProcessFromChart(temp, temp.getpSize());
         swapLists(processId, 1);
         swapComboBox(processId, 1);
     }
@@ -225,15 +235,15 @@ public class MainViewController {
 
                         if (item == null || empty) {
                             setText(null);
-                            setStyle("-fx-control-inner-background: derive(#000000,80%);"); //default
+                            setStyle("-fx-control-inner-background: derive(-fx-base,80%);"); //default
                         } else {
                             setText(item);
                             if (item.startsWith("H")) {
-                                setStyle("-fx-control-inner-background: derive(#ffffff,80%);");
+                                setStyle("-fx-control-inner-background: derive(#ffffff,0%);");
                             } else if (item.startsWith("O")) {
-                                setStyle("-fx-control-inner-background: derive(#000000,80%);");
+                                setStyle("-fx-control-inner-background: derive(#000000,0%);");
                             } else {
-                                setStyle("-fx-control-inner-background: derive(#ff00ff,80%);"); //variable colors go here
+                                setStyle("-fx-control-inner-background: derive(#ffff00,0%);");
                             }
                         }
                     }
@@ -339,10 +349,17 @@ public class MainViewController {
         memChart.getItems().add(index, mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
     }
 
-    //Removes a process from the BarGraph
-    private void removeProcessFromChart(int index) {
-        memChart.getItems().remove(index);
-        addProcessToChart(index, new MemProcess("HOLE", pList.get(index).getpSize()));
+    private void addProcessToChart(MemProcess mp) {
+        memChart.getItems().add(mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
+    }
+
+    //Removes a process from the BarGraph and replaces it with a hole
+    private void removeProcessFromChart(MemProcess mp, int size) {
+        MemProcess hole = new MemProcess("HOLE", size);
+        int index = pList.indexOf(mp);
+
+        pList.set(index, hole);
+        memChart.getItems().set(index, hole.getpID() + "\n" + "(" + hole.getpSize() + "KB)");
     }
 
 }
