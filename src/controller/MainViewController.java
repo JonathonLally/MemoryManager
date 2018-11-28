@@ -153,10 +153,10 @@ public class MainViewController {
         else {
             setOutputArea("Error with CreateMemorySim()");
         }
-        statsTotal.setText(String.valueOf(memsim.getTotalSize()));
-        statsFree.setText(String.valueOf(memsim.getFreeMemory()));
+        statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
+        statsFree.setText(String.valueOf(memsim.getFreeMemory()) + "K");
         Double percent = ((double)memsim.getUsedMemory() / (double)memsim.getTotalSize()* 100);
-        statsPercent.setText(String.valueOf(percent));
+        statsPercent.setText(String.valueOf(percent) + "%");
         System.out.println(memsim.toString());
 
     }
@@ -183,6 +183,7 @@ public class MainViewController {
         System.out.println(memsim.findHoles().toString());
         memsim.printMemory();
         System.out.println(memsim.getProcessList().toString());
+        setOutputArea(memsim.getProcessList().toString());
     }
 
     //Methods

@@ -39,13 +39,12 @@ public class MemProcess {
 
     @Override
     public String toString() {
-        return "MemProcess{" +
-                "pID='" + pID + '\'' +
+        return  "pID='" + pID + '\'' +
                 ", pSize=" + pSize +
-                ", startLocation=" + startLocation +
-                ", endLocation=" + endLocation +
+                ", start=" + startLocation +
+                ", end=" + endLocation +
                 ", memId=" + memId +
-                '}';
+                '}' + '\n';
     }
 
     public int getpSize() {
