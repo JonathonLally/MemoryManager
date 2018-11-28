@@ -40,6 +40,8 @@ public abstract class MemSim {
         for (MemProcess mem : processList) {
             if (mem.getmemID() == id) {
                 processList.remove(mem);
+                System.out.println("Removing Process " + mem.toString());
+                break;
             }
         }
 
@@ -69,7 +71,8 @@ public abstract class MemSim {
                 count++;
             }
             else if (memory[i] != 0 & count != 0) {
-                holes.add(new Hole(count, i));
+                holes.add(new Hole(count, i - count));
+                System.out.println("Found Hole " + count + "  " + i);
                 count = 0;
             }
 
