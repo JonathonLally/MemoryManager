@@ -12,6 +12,17 @@ public class MemProcess {
         this.pID = pID;
     }
 
+    @Override
+    public String toString() {
+        return "MemProcess{" +
+                "pID='" + pID + '\'' +
+                ", pSize=" + pSize +
+                ", startLocation=" + startLocation +
+                ", endLocation=" + endLocation +
+                ", memId=" + memId +
+                '}';
+    }
+
     public int getpSize() {
         return pSize;
     }

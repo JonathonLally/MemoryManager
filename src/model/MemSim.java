@@ -24,7 +24,7 @@ public class MemSim {
     public abstract void insertProcess(MemProcess insert);
 
     public void printMemory() {
-        for (int i =0; i<memory.length; i++) {
+        for (int i =0; i<memory.length; i+=10) {
             System.out.println(memory[i]);
         }
     }
@@ -53,7 +53,6 @@ public class MemSim {
 
 
     public void addToMemory(int start, int size, int pid) {         //Adds process to memory Array
-        System.out.println("Attempting to add to memory");
         for (int i = 0; i< size; i++) {
             int j = start + i;
             memory[j] = pid;
