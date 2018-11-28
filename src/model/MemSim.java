@@ -92,4 +92,28 @@ public abstract class MemSim {
         }
 
     }
+
+    public int getTotalSize() {
+        return totalSize;
+    }
+
+    public int getFreeMemory() {
+        return freeMemory;
+    }
+
+    public int getUsedMemory() {
+        return usedMemory;
+    }
+
+    @Override
+    public String toString() {
+        return "MemSim{" +
+                "totalSize=" + totalSize +
+                ", freeMemory=" + freeMemory +
+                ", usedMemory=" + usedMemory +
+                ", osSize=" + osSize +
+                ", processList=" + processList +
+                ", waitList=" + waitList +
+                '}';
+    }
 }
