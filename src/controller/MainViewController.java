@@ -6,16 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.*;
 
 import java.util.*;
@@ -25,22 +21,22 @@ import static jdk.nashorn.internal.objects.NativeMath.round;
 public class MainViewController {
 
     //FXML Variables
-    @FXML    private ComboBox<String> algorithmComboBox;
-    @FXML    private TextField totalMemoryField;
-    @FXML    private TextField osSizeField;
+
     @FXML    private Button createMemoryButton;
     @FXML    private Button resetMemoryButton;
-    @FXML    private ComboBox<String> addProcessComboBox;
-    @FXML    private TextField processSizeField;
-    @FXML    private ComboBox<String> removeProcessComboBox;
     @FXML    private Button compactMemoryButton;
-    @FXML    private TextArea outputArea;
-    @FXML    private VBox memoryBox;
-    @FXML    private ListView<String> memChart;
+    @FXML    private Button statsPrint;
+    @FXML    private ComboBox<String> algorithmComboBox;
+    @FXML    private ComboBox<String> addProcessComboBox;
+    @FXML    private ComboBox<String> removeProcessComboBox;
+    @FXML    private TextField totalMemoryField;
+    @FXML    private TextField osSizeField;
+    @FXML    private TextField processSizeField;
     @FXML    private TextField statsTotal;
     @FXML    private TextField statsFree;
     @FXML    private TextField statsPercent;
-    @FXML    private Button statsPrint;
+    @FXML    private TextArea outputArea;
+    @FXML    private VBox memoryBox;
     @FXML    private VBox osBox;
     @FXML    private VBox p1Box;
     @FXML    private VBox p2Box;
@@ -74,12 +70,11 @@ public class MainViewController {
             OS_MAX = 2048,
             PROCESS_MIN = 1,
             PROCESS_MAX = 16384;
-    //Size of Memory Graphic = 500;
 
     //FXML Methods
 
-    @FXML
-    public void initialize() {         //Initializes MainView
+    @FXML   //Initializes MainView, Sets Items for ComboBoxes, Sets default selections
+    public void initialize() {
         setOutputArea("Memory Manager Sim Started");
         algorithmComboBox.getItems().addAll("First Fit", "Best Fit","Worst Fit");
         algorithmComboBox.getSelectionModel().select(0);
@@ -92,22 +87,23 @@ public class MainViewController {
         addProcessComboBox.getSelectionModel().select(0);
         setDefaultValues();
     }
-    @FXML
+
+    @FXML   //Activates Compact Memory Button, calls MemSim.compact();
     private void compactMemory(ActionEvent event) {
         setOutputArea("Compacting Memory");
         memsim.compact();
         updateVBoxs();
     }
 
-    @FXML
-    private void setDefaultValues() {                       //Sets default values for GUI text fields
+    @FXML   //Sets Default Values for TextFields
+    private void setDefaultValues() {
         totalMemoryField.setText("8192");
         osSizeField.setText("1024");
         processSizeField.setText("512");
     }
 
 
-    @FXML
+    @FXML   //Add Processes to Memory Sim
     private void addProcess(ActionEvent event) {        //Checks checkProcess field for proper int value
         try {
             int parsed = Integer.parseInt(processSizeField.getText());
@@ -118,7 +114,7 @@ public class MainViewController {
                 displayError("Memory Full", "Added to Waitlist");
             }
 
-            else {
+            else {  //Passes Checks for invalid input, adds process by using MemSim.insertProcess()
                 memsim.insertProcess(new MemProcess(getProcessId_Add(), parsed));
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
@@ -132,13 +128,11 @@ public class MainViewController {
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
         }
-
     }
 
 
-    @FXML
+    @FXML   //Removes Processes for Memory Sim
     void removeProcess(ActionEvent event) {
-
         String remove = null;
         try {
             remove = getProcessId_Remove();
@@ -155,7 +149,7 @@ public class MainViewController {
         updateStats((double)memsim.getFreeMemory());
     }
 
-    @FXML
+    @FXML   //Creates Memory Sim
     void CreateMemorySim(ActionEvent event) {
         try {
             if (getAlgorithmType().equals("First Fit")) {
@@ -185,18 +179,19 @@ public class MainViewController {
         } catch (Exception e) {
             displayError("Cannot Create New Memory Sim", "One Already Created");
         }
-
     }
 
-    @FXML
+    @FXML   //Helper for showing Vboxes
     void showBox(VBox box) {
         box.setVisible(true);
     }
-    @FXML
+
+    @FXML   //Helper for hiding Vboxes
     void hideBox(VBox box) {
         box.setVisible(false);
     }
-    @FXML
+
+    @FXML   //Hides all process Vboxes
     void hideAllBoxes() {
         osBox.setVisible(false);
         p1Box.setVisible(false);
@@ -209,7 +204,8 @@ public class MainViewController {
         p8Box.setVisible(false);
     }
 
-    @FXML void showProcessBox(int choice, int size, int start) {
+    @FXML   //Changes process Vbox visibility, shows processes after they are created
+    void showProcessBox(int choice, int size, int start) {
         switch (choice) {
             case 1:
                 p1Box.setVisible(true);
@@ -267,7 +263,8 @@ public class MainViewController {
 
     }
 
-    @FXML void hideProcessBox(int choice) {
+    @FXML   //Hides processes vboxes when they are removed
+    void hideProcessBox(int choice) {
         switch (choice) {
             case 1:
                 p1Box.setVisible(false);
@@ -301,30 +298,28 @@ public class MainViewController {
 
     }
 
-    @FXML void changeBoxSize(VBox box, double size) {
+    @FXML   //Resizes process Vbox scaled to Memory Size and GUI
+    void changeBoxSize(VBox box, double size) {
         size = size / memsim.getTotalSize();    //Percent of total array size
         size = size * 500;                      //* Total size of graphic
         box.setMinHeight(size);                 //Resize VBox
         box.setMaxHeight(size);
     }
-
+    //Moves process Vbox for Memory Sim GUI, Used when compacted and processes move
     public void changeBoxLoc(VBox box, int start) {
         double loc = (double)start / (double)memsim.getTotalSize();
         loc = loc * 500;
         box.setTranslateY(loc);
     }
 
+    //When Memory Sim changes this updates all process VBoxes (Updates GUI with Model)
     public void updateVBoxs() {
         for (MemProcess mem : memsim.getProcessList()) {
             showProcessBox(mem.getmemID(), mem.getpSize(), mem.getStartLocation());
         }
     }
 
-    public void rebuildVBoxs() {
-
-    }
-
-    @FXML
+    @FXML   //Updates Statistics fields with model
     void updateStats(double free) {
         statsFree.setText(String.valueOf(free));
         Double percent = free / (double)memsim.getTotalSize();
@@ -333,8 +328,8 @@ public class MainViewController {
         statsPercent.setText(String.valueOf(percent));
     }
 
-    @FXML
-    void ResetMemory(ActionEvent event) {                           //Resets Application
+    @FXML   //Resets Application, deletes MemSim, Resets GUI to default
+    void ResetMemory(ActionEvent event) {
         processAvailableList.clear();
         processesAvailable.clear();
         processesRemoveable.clear();
@@ -356,29 +351,35 @@ public class MainViewController {
         setOutputArea("Application Reset");
     }
 
-    @FXML
+    @FXML   //Exits App
     void exit(ActionEvent event) {
         Platform.exit();
     }
 
-    @FXML
+    @FXML   //Prints MemSim Arraylist to output text area
     void printMemoryArray(ActionEvent event) {
         setOutputArea(memsim.toOutputString());
     }
 
     //Methods
 
-    private String getAlgorithmType() {     //Gets Algorithm Choice from ComboBox
+    //Gets algorithm type
+    private String getAlgorithmType() {
         return algorithmComboBox.getValue();
     }
 
+    //Gets process to add
     private String getProcessId_Add() {
         return addProcessComboBox.getValue();
     }
 
-    private String getProcessId_Remove() { return removeProcessComboBox.getValue(); }
+    //Gets process to be removed
+    private String getProcessId_Remove() {
+        return removeProcessComboBox.getValue();
+    }
 
-    private int getTotalMemory() {          //Gets value from totalMemory size TextField
+    //Gets value to be used for Memory Size
+    private int getTotalMemory() {
         try {
             int parsed = Integer.parseInt(totalMemoryField.getText());
 
@@ -394,7 +395,8 @@ public class MainViewController {
         return 0;
     }
 
-    private int getOSMemory() {             //Gets value from OSMemory size TextField
+    //Gets value to be used for Operating System Size
+    private int getOSMemory() {
         try {
             int parsed = Integer.parseInt(osSizeField.getText());
 
@@ -410,7 +412,8 @@ public class MainViewController {
         return 0;
     }
 
-    public void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
+    //Writes to the output area in GUI
+    public void setOutputArea(String in) {
         try {
             outputArea.clear();
             outputArea.setText(in);
@@ -419,7 +422,8 @@ public class MainViewController {
         }
     }
 
-    public void launchAboutView() {                                                         //Launches About us window
+    //Launches about us window
+    public void launchAboutView() {
         try {
             Stage thirdStage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AboutView.fxml"));
@@ -433,7 +437,8 @@ public class MainViewController {
         }
     }
 
-    private void displayError(String head, String content) {    //sets text for the Alert and displays it
+    //Launches error popup
+    private void displayError(String head, String content) {
         error.setHeaderText(head);
         error.setContentText(content);
         error.showAndWait();

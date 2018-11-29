@@ -5,16 +5,18 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class WorstFitSim extends MemSim {
+    //Constructor
     public WorstFitSim(int totalMemory, int osMemory) {
         super(totalMemory, osMemory);
     }
 
+    //Inserts processes to proper holes for WorstFit
     public void insertProcess(MemProcess insert) {
         int size = insert.getpSize();
         ArrayList<Hole> holeList = findHoles();
         //Sort Array List and continue
         Collections.sort(holeList, (Comparator.comparingInt(Hole::getSize)));
-        Collections.reverse(holeList);
+        Collections.reverse(holeList);      //We want the worst fit so reverse
 
         for (Hole ho : holeList) {
             System.out.println(ho.toString());

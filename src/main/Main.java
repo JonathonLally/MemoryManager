@@ -8,14 +8,12 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{         //Loads GUI, starting with MainView.fxml
+    @Override   //Starts Application    FXML = view/MainView.fxml   Control = controller/MainViewController
+    public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
         Parent root = loader.load();
-        //MainViewController mainCtrl = loader.getController();       //contains reference to MainViewController instance
         primaryStage.setTitle("Memory Manger");
         Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/resources/ViewStyle.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -5,6 +5,7 @@ public class Hole {
     private int start;
     private int end;
 
+    //Constructor for holes which are open spots in memory
     public Hole(int size, int start) {
         this.size = size;
         this.start = start;
@@ -15,24 +16,8 @@ public class Hole {
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public int getStart() {
         return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-    public int getEnd() {
-        return end;
-    }
-
-    public void setEnd(int end) {
-        this.end = end;
     }
 
     @Override

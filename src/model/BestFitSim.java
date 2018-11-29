@@ -1,18 +1,18 @@
 package model;
 
-import controller.MainViewController;
-import javafx.fxml.FXMLLoader;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class BestFitSim extends MemSim {
+
+    //Constructor
     public BestFitSim(int totalMemory, int osMemory) {
         super(totalMemory, osMemory);
     }
 
+
+    //Finds and Inserts Process for BestFit
     public void insertProcess(MemProcess insert) {
         int size = insert.getpSize();
         ArrayList<Hole> holeList = findHoles();

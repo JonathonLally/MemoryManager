@@ -42,10 +42,6 @@ public class MemProcess {
         return pID;
     }
 
-    public void setpID(String pID) {
-        this.pID = pID;
-    }
-
     @Override
     public String toString() {
         return  "pID='" + pID + '\'' +
@@ -60,10 +56,6 @@ public class MemProcess {
         return pSize;
     }
 
-    public void setpSize(int pSize) {
-        this.pSize = pSize;
-    }
-
     private void setmemID() {
         try {
             String[] temp = pID.split(" ");
@@ -72,9 +64,6 @@ public class MemProcess {
             memId = 9;              //OS CORRECT
         }
     }
-
-
-
 
     public int getmemID() {
         return memId;
