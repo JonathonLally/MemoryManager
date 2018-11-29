@@ -156,7 +156,10 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="compactMemoryButton" mnemonicParsing="false" onAction="#compactMemory" text="Compact" />
+                        <Button fx:id="compactMemoryButton" mnemonicParsing="false" onAction="#compactMemory" text="Compact">
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin></Button>
                      </children>
                      <padding>
                         <Insets left="75.0" top="10.0" />
@@ -177,7 +180,7 @@
                <children>
                   <VBox prefHeight="230.0" prefWidth="238.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Statistics">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font></Text>

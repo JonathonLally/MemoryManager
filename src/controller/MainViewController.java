@@ -75,6 +75,8 @@ public class MainViewController {
     }
     @FXML
     private void compactMemory(ActionEvent event) {
+        setOutputArea("Compacting Memory");
+        memsim.compact();
     }
 
     @FXML

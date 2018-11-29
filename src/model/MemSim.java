@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public abstract class MemSim {
 
@@ -32,9 +34,11 @@ public abstract class MemSim {
     }
 
     public void removeProcess(int id) {
+        int count = 0;
         for (int i = 0; i <memory.length; i++) {
             if (memory[i] == id) {
                 memory[i] = 0;
+                count++;
             }
         }
         for (MemProcess mem : processList) {
@@ -44,6 +48,8 @@ public abstract class MemSim {
                 break;
             }
         }
+        usedMemory -= count;
+        System.out.println(usedMemory);
 
     }
 
@@ -82,6 +88,35 @@ public abstract class MemSim {
         }
 
         return holes;
+    }
+
+    //Rebuild Memory Array
+    //Take advantage of the fact that we know how much free space and OS size
+    public void compact() {
+        ArrayList<Integer> tempP = new ArrayList<Integer>();
+        for (int i = 0; i < memory.length; i++) {
+            if (memory[i] != 0 & memory[i] != 9) {
+                tempP.add(memory[i]);
+            }
+        }
+        Collections.sort(tempP);
+        ArrayList<Integer> tempOS = new ArrayList<Integer>();
+        for (int i = 0; i < osSize; i++) {
+            tempOS.add(9);
+        }
+        ArrayList<Integer> tempFree = new ArrayList<Integer>();
+        for (int i = 0; i < freeMemory; i++) {
+            tempFree.add(0);
+        }
+        tempOS.addAll(tempP);
+        tempOS.addAll(tempFree);
+        //Arraylist<Integer> - > Array[int]
+        memory = tempOS.stream().mapToInt(Integer::intValue).toArray();
+        rebuildArrayLists();
+    }
+            //TODO fix Arraylists after compaction maybe.
+    public void rebuildArrayLists() {
+
     }
 
 

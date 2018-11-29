@@ -13,6 +13,14 @@ public class MemProcess {
         setmemID();
     }
 
+    public MemProcess(String pID, int pSize, int start, int end, int memId) {
+        this.pID = pID;
+        this.pSize = pSize;
+        this.startLocation = start;
+        this.endLocation = end;
+        this.memId = memId;
+    }
+
     public int getStartLocation() {
         return startLocation;
     }

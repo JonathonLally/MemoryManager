@@ -28,6 +28,9 @@ public class FirstFitSim extends MemSim {
                 waitList.add(insert);
             }
         }
+        System.out.println(usedMemory);
+        usedMemory += insert.getpSize();
+        System.out.println(usedMemory);
 
     }
 

@@ -31,6 +31,10 @@ public class BestFitSim extends MemSim {
                 waitList.add(insert);
             }
         }
+        usedMemory = usedMemory + insert.getpSize();
+        System.out.println(usedMemory);
+        System.out.println(insert.getpSize());
+        System.out.println(usedMemory);
 
     }
 }
