@@ -7,12 +7,13 @@ public class MemProcess {
     private int endLocation;
     private int memId;
 
+    //Constructor for initial add
     public MemProcess(String pID, int pSize) {
         this.pID = pID;
         this.pSize = pSize;
         setmemID();
     }
-
+    //Constructor for rebuild/movement
     public MemProcess(String pID, int pSize, int start, int end, int memId) {
         this.pID = pID;
         this.pSize = pSize;
@@ -71,6 +72,8 @@ public class MemProcess {
             memId = 9;              //OS CORRECT
         }
     }
+
+
 
 
     public int getmemID() {
