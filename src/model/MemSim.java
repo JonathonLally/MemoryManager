@@ -156,4 +156,17 @@ public abstract class MemSim {
                 ", waitList=" + waitList +
                 '}';
     }
+
+    public String toOutputString() {
+        StringBuilder build = new StringBuilder();
+        for (MemProcess mem : processList) {
+            build.append(mem.getpID() + " ");
+            build.append(" Size: " + String.valueOf(mem.getpSize()));
+            build.append(" Start: " + String.valueOf(mem.getStartLocation()));
+            build.append(" End:" + String.valueOf(mem.getEndLocation()));
+            build.append(" \n");
+        }
+        String temp = build.toString();
+        return temp;
+    }
 }

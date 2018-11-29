@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.*;
@@ -49,6 +50,15 @@ public class MainViewController {
     @FXML    private VBox p6Box;
     @FXML    private VBox p7Box;
     @FXML    private VBox p8Box;
+    @FXML    private Text osText;
+    @FXML    private Text p1Text;
+    @FXML    private Text p2Text;
+    @FXML    private Text p3Text;
+    @FXML    private Text p4Text;
+    @FXML    private Text p5Text;
+    @FXML    private Text p6Text;
+    @FXML    private Text p7Text;
+    @FXML    private Text p8Text;
 
     //Variables
     private ObservableList<String> processAvailableList;     //Keeps track of what processes are available
@@ -167,6 +177,7 @@ public class MainViewController {
                 setOutputArea("Error with CreateMemorySim()");
             }
             showBox(osBox);
+            osText.setText(String.valueOf(memsim.getOsSize()));
             changeBoxSize(osBox, memsim.getOsSize());
             statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
             updateStats((double)memsim.getFreeMemory());
@@ -204,41 +215,49 @@ public class MainViewController {
                 p1Box.setVisible(true);
                 changeBoxSize(p1Box, size);
                 changeBoxLoc(p1Box, start);
+                p1Text.setText(String.valueOf(size));
                 break;
             case 2:
                 p2Box.setVisible(true);
                 changeBoxSize(p2Box, size);
                 changeBoxLoc(p2Box, start);
+                p2Text.setText(String.valueOf(size));
                 break;
             case 3:
                 p3Box.setVisible(true);
                 changeBoxSize(p3Box, size);
                 changeBoxLoc(p3Box, start);
+                p3Text.setText(String.valueOf(size));
                 break;
             case 4:
                 p4Box.setVisible(true);
                 changeBoxSize(p4Box, size);
                 changeBoxLoc(p4Box, start);
+                p4Text.setText(String.valueOf(size));
                 break;
             case 5:
                 p5Box.setVisible(true);
                 changeBoxSize(p5Box, size);
                 changeBoxLoc(p5Box, start);
+                p5Text.setText(String.valueOf(size));
                 break;
             case 6:
                 p6Box.setVisible(true);
                 changeBoxSize(p6Box, size);
                 changeBoxLoc(p6Box, start);
+                p6Text.setText(String.valueOf(size));
                 break;
             case 7:
                 p7Box.setVisible(true);
                 changeBoxSize(p7Box, size);
                 changeBoxLoc(p7Box, start);
+                p7Text.setText(String.valueOf(size));
                 break;
             case 8:
                 p8Box.setVisible(true);
                 changeBoxSize(p8Box, size);
                 changeBoxLoc(p8Box, start);
+                p8Text.setText(String.valueOf(size));
                 break;
             default:
                 System.out.println("Error Switch Statement");
@@ -331,6 +350,9 @@ public class MainViewController {
         processesRemoveable = new ArrayList<>();
         addProcessComboBox.setItems(processAvailableList);
         addProcessComboBox.getSelectionModel().select(0);
+        statsTotal.clear();
+        statsFree.clear();
+        statsPercent.clear();
         setOutputArea("Application Reset");
     }
 
@@ -341,10 +363,7 @@ public class MainViewController {
 
     @FXML
     void printMemoryArray(ActionEvent event) {
-        System.out.println(memsim.findHoles().toString());
-        memsim.printMemory();
-        System.out.println(memsim.getProcessList().toString());
-        setOutputArea(memsim.getProcessList().toString());
+        setOutputArea(memsim.toOutputString());
     }
 
     //Methods
