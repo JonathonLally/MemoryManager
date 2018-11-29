@@ -122,7 +122,7 @@ public abstract class MemSim {
             for (int i = 0; i <memory.length; i++) {
                 if (memory[i] == mem.getmemID()) {
                     mem.setStartLocation(i);
-                    mem.setEndLocation(i + count);
+                    mem.setEndLocation(i + mem.getpSize());
                     break;
                 }
             }
