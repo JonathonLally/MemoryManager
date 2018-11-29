@@ -142,6 +142,10 @@ public abstract class MemSim {
         return freeMemory;
     }
 
+    public int getOsSize() {
+        return osSize;
+    }
+
     @Override
     public String toString() {
         return "MemSim{" +

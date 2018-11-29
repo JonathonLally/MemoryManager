@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -39,13 +40,21 @@ public class MainViewController {
     @FXML    private TextField statsFree;
     @FXML    private TextField statsPercent;
     @FXML    private Button statsPrint;
+    @FXML    private VBox osBox;
+    @FXML    private VBox p1Box;
+    @FXML    private VBox p2Box;
+    @FXML    private VBox p3Box;
+    @FXML    private VBox p4Box;
+    @FXML    private VBox p5Box;
+    @FXML    private VBox p6Box;
+    @FXML    private VBox p7Box;
+    @FXML    private VBox p8Box;
 
     //Variables
     private ObservableList<String> processAvailableList;     //Keeps track of what processes are available
     private ObservableList<String> processRemoveableList;    //Processes that can be removed
     private ArrayList<String> processesAvailable;
     private ArrayList<String> processesRemoveable;
-    private ArrayList<MemProcess> pList;
     private Alert error = new Alert(Alert.AlertType.ERROR);
     private MemSim memsim;
 
@@ -55,6 +64,7 @@ public class MainViewController {
             OS_MAX = 2048,
             PROCESS_MIN = 1,
             PROCESS_MAX = 16384;
+    //Size of Memory Graphic = 500;
 
     //FXML Methods
 
@@ -68,17 +78,15 @@ public class MainViewController {
         processesAvailable = new ArrayList<>(Arrays.asList("Process 1", "Process 2", "Process 3", "Process 4",
                 "Process 5", "Process 6", "Process 7", "Process 8"));
         processesRemoveable = new ArrayList<>();
-        pList = new ArrayList<>();
         addProcessComboBox.setItems(processAvailableList);
         addProcessComboBox.getSelectionModel().select(0);
         setDefaultValues();
-        initMemChart();
-
     }
     @FXML
     private void compactMemory(ActionEvent event) {
         setOutputArea("Compacting Memory");
         memsim.compact();
+        updateVBoxs();
     }
 
     @FXML
@@ -96,15 +104,20 @@ public class MainViewController {
 
             if (processSizeInvalid(parsed))
                 displayError("Invalid Process Size", "Please enter an integer between 1 and 16384");
+            else if (parsed > memsim.getFreeMemory()) {
+                displayError("Memory Full", "Added to Waitlist");
+            }
+
             else {
-                MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
-                memsim.insertProcess(temp);
-                pList.add(temp);
+                memsim.insertProcess(new MemProcess(getProcessId_Add(), parsed));
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
                 swapComboBox(processId, 0);
-                addProcessToChart(temp);
                 updateStats((double)memsim.getFreeMemory());
+                processId = processId.replaceAll("\\D+","");
+                int tempInt = Integer.parseInt(processId);
+                updateVBoxs();
+                setOutputArea("Adding Process" + processId + " of size " + parsed);
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -116,50 +129,179 @@ public class MainViewController {
     @FXML
     void removeProcess(ActionEvent event) {
 
-        String processId = getProcessId_Remove();
-        for (MemProcess memP : pList) {
-            if (processId == memP.getpID()) {
-                memsim.removeProcess(memP.getmemID());
-            }
+        String remove = null;
+        try {
+            remove = getProcessId_Remove();
+            swapLists(remove, 1);
+            swapComboBox(remove, 1);
+            remove = remove.replaceAll("\\D+","");
+            int removeint = Integer.parseInt(remove);
+            memsim.removeProcess(removeint);
+            hideProcessBox(removeint);
+            setOutputArea("Removing Process " + remove);
+        } catch (Exception e) {
+            displayError("Halp Process Remove", "No Process to be Removed");
         }
-
-        MemProcess temp = null;
-
-
-        for(int i = 0; i < pList.size(); i++)
-            if(pList.get(i).getpID().equals(processId))
-                temp = pList.get(i);
-
-
-        removeProcessFromChart(temp, temp.getpSize());
-        swapLists(processId, 1);
-        swapComboBox(processId, 1);
         updateStats((double)memsim.getFreeMemory());
     }
 
     @FXML
     void CreateMemorySim(ActionEvent event) {
-        if (getAlgorithmType().equals("First Fit")) {
-            setOutputArea("Creating First Fit Sim");
-            memsim = new FirstFitSim(getTotalMemory(), getOSMemory());
-            outputArea.appendText("\nTotal size of " + getTotalMemory());
+        try {
+            if (getAlgorithmType().equals("First Fit")) {
+                setOutputArea("Creating First Fit Sim");
+                memsim = new FirstFitSim(getTotalMemory(), getOSMemory());
+                outputArea.appendText("\nTotal size of " + getTotalMemory());
+            }
+            else if (getAlgorithmType().equals("Best Fit")) {
+                setOutputArea("Creating Best Fit Sim");
+                memsim = new BestFitSim(getTotalMemory(), getOSMemory());
+                outputArea.appendText("\nTotal size of " + getTotalMemory());
+            }
+            else if (getAlgorithmType().equals("Worst Fit")) {
+                setOutputArea("Creating Worst Fit Sim");
+                memsim = new WorstFitSim(getTotalMemory(), getOSMemory());
+                outputArea.appendText("\nTotal size of " + getTotalMemory());
+            }
+            else {
+                setOutputArea("Error with CreateMemorySim()");
+            }
+            showBox(osBox);
+            changeBoxSize(osBox, memsim.getOsSize());
+            statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
+            updateStats((double)memsim.getFreeMemory());
+            System.out.println(memsim.toString());
+        } catch (Exception e) {
+            displayError("Cannot Create New Memory Sim", "One Already Created");
         }
-        else if (getAlgorithmType().equals("Best Fit")) {
-            setOutputArea("Creating Best Fit Sim");
-            memsim = new BestFitSim(getTotalMemory(), getOSMemory());
-            outputArea.appendText("\nTotal size of " + getTotalMemory());
+
+    }
+
+    @FXML
+    void showBox(VBox box) {
+        box.setVisible(true);
+    }
+    @FXML
+    void hideBox(VBox box) {
+        box.setVisible(false);
+    }
+    @FXML
+    void hideAllBoxes() {
+        osBox.setVisible(false);
+        p1Box.setVisible(false);
+        p2Box.setVisible(false);
+        p3Box.setVisible(false);
+        p4Box.setVisible(false);
+        p5Box.setVisible(false);
+        p6Box.setVisible(false);
+        p7Box.setVisible(false);
+        p8Box.setVisible(false);
+    }
+
+    @FXML void showProcessBox(int choice, int size, int start) {
+        switch (choice) {
+            case 1:
+                p1Box.setVisible(true);
+                changeBoxSize(p1Box, size);
+                changeBoxLoc(p1Box, start);
+                break;
+            case 2:
+                p2Box.setVisible(true);
+                changeBoxSize(p2Box, size);
+                changeBoxLoc(p2Box, start);
+                break;
+            case 3:
+                p3Box.setVisible(true);
+                changeBoxSize(p3Box, size);
+                changeBoxLoc(p3Box, start);
+                break;
+            case 4:
+                p4Box.setVisible(true);
+                changeBoxSize(p4Box, size);
+                changeBoxLoc(p4Box, start);
+                break;
+            case 5:
+                p5Box.setVisible(true);
+                changeBoxSize(p5Box, size);
+                changeBoxLoc(p5Box, start);
+                break;
+            case 6:
+                p6Box.setVisible(true);
+                changeBoxSize(p6Box, size);
+                changeBoxLoc(p6Box, start);
+                break;
+            case 7:
+                p7Box.setVisible(true);
+                changeBoxSize(p7Box, size);
+                changeBoxLoc(p7Box, start);
+                break;
+            case 8:
+                p8Box.setVisible(true);
+                changeBoxSize(p8Box, size);
+                changeBoxLoc(p8Box, start);
+                break;
+            default:
+                System.out.println("Error Switch Statement");
+                break;
+
         }
-        else if (getAlgorithmType().equals("Worst Fit")) {
-            setOutputArea("Creating Worst Fit Sim");
-            memsim = new WorstFitSim(getTotalMemory(), getOSMemory());
-            outputArea.appendText("\nTotal size of " + getTotalMemory());
+
+    }
+
+    @FXML void hideProcessBox(int choice) {
+        switch (choice) {
+            case 1:
+                p1Box.setVisible(false);
+                break;
+            case 2:
+                p2Box.setVisible(false);
+                break;
+            case 3:
+                p3Box.setVisible(false);
+                break;
+            case 4:
+                p4Box.setVisible(false);
+                break;
+            case 5:
+                p5Box.setVisible(false);
+                break;
+            case 6:
+                p6Box.setVisible(false);
+                break;
+            case 7:
+                p7Box.setVisible(false);
+                break;
+            case 8:
+                p8Box.setVisible(false);
+                break;
+            default:
+                System.out.println("Error Switch Statement");
+                break;
+
         }
-        else {
-            setOutputArea("Error with CreateMemorySim()");
+
+    }
+
+    @FXML void changeBoxSize(VBox box, double size) {
+        size = size / memsim.getTotalSize();    //Percent of total array size
+        size = size * 500;                      //* Total size of graphic
+        box.setMinHeight(size);                 //Resize VBox
+        box.setMaxHeight(size);
+    }
+
+    public void changeBoxLoc(VBox box, int start) {
+        double loc = (double)start / (double)memsim.getTotalSize();
+        loc = loc * 500;
+        box.setTranslateY(loc);
+    }
+
+    public void updateVBoxs() {
+        for (MemProcess mem : memsim.getProcessList()) {
+            showProcessBox(mem.getmemID(), mem.getpSize(), mem.getStartLocation());
         }
-        statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
-        updateStats((double)memsim.getFreeMemory());
-        System.out.println(memsim.toString());
+    }
+
+    public void rebuildVBoxs() {
 
     }
 
@@ -177,11 +319,19 @@ public class MainViewController {
         processAvailableList.clear();
         processesAvailable.clear();
         processesRemoveable.clear();
-        pList.clear();
         addProcessComboBox.setItems(null);
         removeProcessComboBox.setItems(null);
         memsim = null;
-        initialize();
+        hideAllBoxes();
+        algorithmComboBox.getSelectionModel().select(0);
+        processAvailableList = FXCollections.observableArrayList("Process 1", "Process 2", "Process 3", "Process 4",
+                "Process 5", "Process 6", "Process 7", "Process 8");
+        processesAvailable = new ArrayList<>(Arrays.asList("Process 1", "Process 2", "Process 3", "Process 4",
+                "Process 5", "Process 6", "Process 7", "Process 8"));
+        processesRemoveable = new ArrayList<>();
+        addProcessComboBox.setItems(processAvailableList);
+        addProcessComboBox.getSelectionModel().select(0);
+        setOutputArea("Application Reset");
     }
 
     @FXML
@@ -241,39 +391,7 @@ public class MainViewController {
         return 0;
     }
 
-    private void initMemChart() {
-        memChart.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (item == null || empty) {
-                            setText(null);
-                            setStyle("-fx-control-inner-background: derive(-fx-base,80%);"); //default
-                        } else {
-                            setText(item);
-                            if (item.startsWith("H")) {
-                                setStyle("-fx-control-inner-background: derive(#ffffff,0%);");
-                            } else if (item.startsWith("O")) {
-                                setStyle("-fx-control-inner-background: derive(#000000,0%);");
-                            } else {
-                                setStyle("-fx-control-inner-background: derive(#ffff00,0%);");
-                            }
-                        }
-                    }
-                };
-            }
-        });
-
-        pList.add(new MemProcess("OS", Integer.parseInt(osSizeField.getText())));
-        memChart.getItems().add(0, "OS\n" + "(" + osSizeField.getText() + "KB)");
-    }
-
-
-    private void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
+    public void setOutputArea(String in) {                      //Writes to textArea in GUI, can use to write to users
         try {
             outputArea.clear();
             outputArea.setText(in);
@@ -361,58 +479,7 @@ public class MainViewController {
             removeProcessComboBox.getSelectionModel().selectNext();
     }
 
-    //Adds a process to the BarGraph
-    private void addProcessToChart(int index, MemProcess mp) {
-        memChart.getItems().add(index, mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
-    }
 
-    private void addProcessToChart(MemProcess mp) {
-        memChart.getItems().add(mp.getpID() + "\n" + "(" + mp.getpSize() + "KB)");
-    }
 
-    private void consolidateHoles(int index, MemProcess mp) {
-
-        if (index == 1) {
-            if (pList.get(index + 1).getpID().equals("HOLE")) {
-                mp.setpSize(mp.getpSize() + pList.get(index + 1).getpSize());
-                memChart.getItems().remove(index + 1);
-                pList.remove(index + 1);
-            }
-        } else if (index == pList.size() - 1) {
-            if (pList.get(index - 1).getpID().equals("HOLE")) {
-                mp.setpSize(mp.getpSize() + pList.get(index - 1).getpSize());
-                memChart.getItems().remove(index - 1);
-                pList.remove(index - 1);
-                index--;
-            }
-        } else {
-            if (pList.get(index + 1).getpID().equals("HOLE")) {
-                System.out.println("If statement #2 tripped");
-                mp.setpSize(mp.getpSize() + pList.get(index + 1).getpSize());
-                memChart.getItems().remove(index + 1);
-                pList.remove(index + 1);
-            }
-            if (pList.get(index - 1).getpID().equals("HOLE")) {
-                System.out.println("If statement #1 tripped");
-                mp.setpSize(mp.getpSize() + pList.get(index - 1).getpSize());
-                memChart.getItems().remove(index - 1);
-                pList.remove(index - 1);
-                index--;
-            }
-        }
-
-        pList.remove(index);
-        memChart.getItems().remove(index);
-        pList.add(index, mp);
-        addProcessToChart(index, mp);
-        pList.trimToSize();
-    }
-
-    //Removes a process from the BarGraph and replaces it with a hole
-    private void removeProcessFromChart(MemProcess mp, int size) {
-        MemProcess hole = new MemProcess("HOLE", size);
-        int index = pList.indexOf(mp);
-        consolidateHoles(index, hole);
-    }
 
 }

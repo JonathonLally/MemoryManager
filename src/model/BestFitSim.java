@@ -1,5 +1,8 @@
 package model;
 
+import controller.MainViewController;
+import javafx.fxml.FXMLLoader;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
