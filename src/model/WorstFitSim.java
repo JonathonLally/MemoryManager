@@ -30,8 +30,8 @@ public class WorstFitSim extends MemSim {
                 System.out.println("Process won't fit, adding to Waitlist");
                 waitList.add(insert);
             }
-            usedMemory += insert.getpSize();
         }
+        freeMemory -= insert.getpSize();
 
     }
 }

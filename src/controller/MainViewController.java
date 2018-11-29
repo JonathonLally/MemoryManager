@@ -18,6 +18,8 @@ import model.*;
 
 import java.util.*;
 
+import static jdk.nashorn.internal.objects.NativeMath.round;
+
 public class MainViewController {
 
     //FXML Variables
@@ -98,12 +100,11 @@ public class MainViewController {
                 MemProcess temp = new MemProcess(getProcessId_Add(), parsed);
                 memsim.insertProcess(temp);
                 pList.add(temp);
-                System.out.println(pList.size());
-                //TODO UPDATE ADD/REMOVE PROCESS LISTVIEWS
                 String processId = getProcessId_Add();
                 swapLists(processId, 0);
                 swapComboBox(processId, 0);
                 addProcessToChart(temp);
+                updateStats((double)memsim.getFreeMemory());
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -133,6 +134,7 @@ public class MainViewController {
         removeProcessFromChart(temp, temp.getpSize());
         swapLists(processId, 1);
         swapComboBox(processId, 1);
+        updateStats((double)memsim.getFreeMemory());
     }
 
     @FXML
@@ -156,11 +158,18 @@ public class MainViewController {
             setOutputArea("Error with CreateMemorySim()");
         }
         statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
-        statsFree.setText(String.valueOf(memsim.getFreeMemory()) + "K");
-        Double percent = ((double)memsim.getUsedMemory() / (double)memsim.getTotalSize()* 100);
-        statsPercent.setText(String.valueOf(percent) + "%");
+        updateStats((double)memsim.getFreeMemory());
         System.out.println(memsim.toString());
 
+    }
+
+    @FXML
+    void updateStats(double free) {
+        statsFree.setText(String.valueOf(free));
+        Double percent = free / (double)memsim.getTotalSize();
+        round(percent,3);
+        percent = percent * 100;
+        statsPercent.setText(String.valueOf(percent));
     }
 
     @FXML

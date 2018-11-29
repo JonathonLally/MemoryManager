@@ -7,7 +7,6 @@ public abstract class MemSim {
 
     protected int totalSize;
     protected int freeMemory;
-    protected int usedMemory;
     protected int osSize;
     protected ArrayList<MemProcess> processList;      //Contains processes in memory
     protected ArrayList<MemProcess> waitList;         //Contains processes in wait queue
@@ -20,7 +19,6 @@ public abstract class MemSim {
         processList = new ArrayList<MemProcess>();
         waitList = new ArrayList<MemProcess>();
         freeMemory = totalSize - osSize;
-        usedMemory = osSize;
         insertOS();
     }
 
@@ -44,11 +42,10 @@ public abstract class MemSim {
             if (mem.getmemID() == id) {
                 processList.remove(mem);
                 System.out.println("Removing Process " + mem.toString());
+                freeMemory += mem.getpSize();
                 break;
             }
         }
-        usedMemory -= count;
-        System.out.println(usedMemory);
 
     }
 
@@ -145,16 +142,11 @@ public abstract class MemSim {
         return freeMemory;
     }
 
-    public int getUsedMemory() {
-        return usedMemory;
-    }
-
     @Override
     public String toString() {
         return "MemSim{" +
                 "totalSize=" + totalSize +
                 ", freeMemory=" + freeMemory +
-                ", usedMemory=" + usedMemory +
                 ", osSize=" + osSize +
                 ", processList=" + processList +
                 ", waitList=" + waitList +

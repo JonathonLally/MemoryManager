@@ -201,7 +201,7 @@
                         </HBox>
                         <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Percent Used" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Percent Free" />
                               <TextField fx:id="statsPercent" editable="false" maxWidth="50.0" prefWidth="50.0">
                                  <HBox.margin>
                                     <Insets left="7.0" />
