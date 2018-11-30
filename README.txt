@@ -4,14 +4,13 @@ For Operating Systems Fall 2018
 
 To Use
 First Choose an Alorithm in Setup : First Fit, Best Fit, Worst Fit
-Then Select the Memory Size and Operating System Size.
+Then Select the Memory Size and Operating System Size
 Then press the Create Button
 
 To add a process select one from the add process selector (1-8)
-Specify a zie and press Add
+Specify a size and press Add
 
-To remove a process select from remove process selection
-Press Remove
+To remove a process select from remove process selection and press remove
 
 Compact Button will compact memory processes in order and free up holes into one large one at the end.
 
