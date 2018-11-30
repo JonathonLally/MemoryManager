@@ -22,10 +22,6 @@ public class MainViewController {
 
     //FXML Variables
 
-    @FXML    private Button createMemoryButton;
-    @FXML    private Button resetMemoryButton;
-    @FXML    private Button compactMemoryButton;
-    @FXML    private Button statsPrint;
     @FXML    private ComboBox<String> algorithmComboBox;
     @FXML    private ComboBox<String> addProcessComboBox;
     @FXML    private ComboBox<String> removeProcessComboBox;
@@ -36,7 +32,6 @@ public class MainViewController {
     @FXML    private TextField statsFree;
     @FXML    private TextField statsPercent;
     @FXML    private TextArea outputArea;
-    @FXML    private VBox memoryBox;
     @FXML    private VBox osBox;
     @FXML    private VBox p1Box;
     @FXML    private VBox p2Box;
@@ -58,7 +53,6 @@ public class MainViewController {
 
     //Variables
     private ObservableList<String> processAvailableList;     //Keeps track of what processes are available
-    private ObservableList<String> processRemoveableList;    //Processes that can be removed
     private ArrayList<String> processesAvailable;
     private ArrayList<String> processesRemoveable;
     private Alert error = new Alert(Alert.AlertType.ERROR);
@@ -99,7 +93,7 @@ public class MainViewController {
     private void setDefaultValues() {
         totalMemoryField.setText("8192");
         osSizeField.setText("1024");
-        processSizeField.setText("512");
+        processSizeField.setText("768");
     }
 
 
@@ -334,7 +328,7 @@ public class MainViewController {
         processesAvailable.clear();
         processesRemoveable.clear();
         addProcessComboBox.setItems(null);
-        removeProcessComboBox.setItems(null);
+        removeProcessComboBox.getItems().removeAll(removeProcessComboBox.getItems());
         memsim = null;
         hideAllBoxes();
         algorithmComboBox.getSelectionModel().select(0);

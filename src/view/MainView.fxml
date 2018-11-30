@@ -178,7 +178,7 @@
                      </VBox.margin></Text>
                   <StackPane alignment="TOP_CENTER" maxWidth="150.0" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: #D4E6F1; -fx-border-width: 1; -fx-border-color: #000000;">
                      <children>
-                        <VBox fx:id="osBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #CD5C5C;" visible="false">
+                        <VBox fx:id="osBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #CD5C5C; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OS">
                                  <font>
@@ -194,7 +194,7 @@
                                  </VBox.margin></Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p1Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFF00;" visible="false">
+                        <VBox fx:id="p1Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFF00; -fx-border-image-width: 1; -fx-border-color: #000000;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P1">
                                  <font>
@@ -211,7 +211,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p2Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #008000;" visible="false">
+                        <VBox fx:id="p2Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #008000; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P2">
                                  <font>
@@ -228,7 +228,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p3Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #0000FF;" visible="false">
+                        <VBox fx:id="p3Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #0000FF; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P3">
                                  <font>
@@ -245,7 +245,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p4Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FF00FF;" visible="false">
+                        <VBox fx:id="p4Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FF00FF; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P4">
                                  <font>
@@ -262,7 +262,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p5Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #800000;" visible="false">
+                        <VBox fx:id="p5Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #800000; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P5">
                                  <font>
@@ -279,7 +279,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p6Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #808000;" visible="false">
+                        <VBox fx:id="p6Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #808000; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P6">
                                  <font>
@@ -296,7 +296,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p7Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #00FF00;" visible="false">
+                        <VBox fx:id="p7Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #00FF00; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P7">
                                  <font>
@@ -313,7 +313,7 @@
                               </Text>
                            </children>
                         </VBox>
-                        <VBox fx:id="p8Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #008080;" visible="false">
+                        <VBox fx:id="p8Box" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #008080; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="P8">
                                  <font>
@@ -349,6 +349,11 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Memory" />
                               <TextField fx:id="statsTotal" editable="false" maxWidth="50.0" prefWidth="50.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                                 <HBox.margin>
+                                    <Insets left="-10.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
@@ -357,10 +362,15 @@
                         <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Free Memory" />
-                              <TextField fx:id="statsFree" maxWidth="50.0">
+                              <TextField fx:id="statsFree" editable="false" maxWidth="50.0">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin></TextField>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                                 <HBox.margin>
+                                    <Insets left="-10.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                         </HBox>
                         <HBox prefHeight="59.0" prefWidth="238.0" spacing="15.0">
@@ -370,6 +380,11 @@
                                  <HBox.margin>
                                     <Insets left="7.0" />
                                  </HBox.margin></TextField>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="\%">
+                                 <HBox.margin>
+                                    <Insets left="-10.0" top="3.0" />
+                                 </HBox.margin>
+                              </Text>
                            </children>
                         </HBox>
                         <Button fx:id="statsPrint" mnemonicParsing="false" onAction="#printMemoryArray" text="Print Array">
