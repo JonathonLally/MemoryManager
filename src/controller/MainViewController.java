@@ -121,6 +121,8 @@ public class MainViewController {
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
+        } catch (NullPointerException n) {
+            displayError("No more processes", "Please remove a process");
         }
     }
 
@@ -137,10 +139,11 @@ public class MainViewController {
             memsim.removeProcess(removeint);
             hideProcessBox(removeint);
             setOutputArea("Removing Process " + remove);
+            updateStats((double)memsim.getFreeMemory());
         } catch (Exception e) {
             displayError("Halp Process Remove", "No Process to be Removed");
         }
-        updateStats((double)memsim.getFreeMemory());
+
     }
 
     @FXML   //Creates Memory Sim
@@ -342,6 +345,7 @@ public class MainViewController {
         statsTotal.clear();
         statsFree.clear();
         statsPercent.clear();
+        setDefaultValues();
         setOutputArea("Application Reset");
     }
 
@@ -352,7 +356,11 @@ public class MainViewController {
 
     @FXML   //Prints MemSim Arraylist to output text area
     void printMemoryArray(ActionEvent event) {
-        setOutputArea(memsim.toOutputString());
+        try {
+            setOutputArea(memsim.toOutputString());
+        } catch (Exception e) {
+            displayError("No Array to print", "Please wait to print until there is something to print");
+        }
     }
 
     //Methods
@@ -496,8 +504,4 @@ public class MainViewController {
         else if (size != 1)
             removeProcessComboBox.getSelectionModel().selectNext();
     }
-
-
-
-
 }
