@@ -18,7 +18,7 @@ public class WorstFitSim extends MemSim {
         Collections.sort(holeList, (Comparator.comparingInt(Hole::getSize)));
         Collections.reverse(holeList);      //We want the worst fit so reverse
 
-        for (Hole ho : holeList) {
+        for (Hole ho : holeList) {  //For all holes, if process fits insert
             System.out.println(ho.toString());
             if (ho.getSize() >= insert.getpSize()) {
                 System.out.println("Proper Hole Found");
@@ -27,13 +27,14 @@ public class WorstFitSim extends MemSim {
                 insert.setEndLocation(ho.getStart() + insert.getpSize());
                 processList.add(insert);
                 System.out.println("Process added at " + insert.getStartLocation() + " with size of " + insert.getpSize());
+                freeMemory -= insert.getpSize();
                 break;
             } else {
                 System.out.println("Process won't fit, adding to Waitlist");
                 waitList.add(insert);
             }
         }
-        freeMemory -= insert.getpSize();
+
 
     }
 }

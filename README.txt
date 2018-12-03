@@ -8,14 +8,14 @@ Then Select the Memory Size and Operating System Size.
 Then press the Create Button
 
 To add a process select one from the add process selector (1-8)
-Specify a zie and press Add
+Specify a size and press Add
 
 To remove a process select from remove process selection
 Press Remove
 
 Compact Button will compact memory processes in order and free up holes into one large one at the end.
 
-You may all press the Print Array button to see the Processes from the simulation in the output area.
+You may also press the Print Array button to see the Processes from the simulation in the output area.
 
 Assumptions
 Total Memory Size Constraint = 4096 - 16384 (KB)

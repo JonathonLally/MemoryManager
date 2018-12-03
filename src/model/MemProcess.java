@@ -1,5 +1,6 @@
 package model;
 
+//Used to mimic a process is memory
 public class MemProcess {
     private String pID;
     private int pSize;

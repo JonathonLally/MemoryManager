@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Injected FXML from Scene Builder
+Creates GUI, Controlled via controller.MainViewController
+-->
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -176,7 +180,7 @@
                      <VBox.margin>
                         <Insets left="115.0" top="3.0" />
                      </VBox.margin></Text>
-                  <StackPane alignment="TOP_CENTER" maxWidth="150.0" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: #D4E6F1; -fx-border-width: 1; -fx-border-color: #000000;">
+                  <StackPane alignment="TOP_CENTER" maxWidth="150.0" prefHeight="500.0" prefWidth="200.0" style="-fx-background-color: #65fff7; -fx-border-width: 1; -fx-border-color: #000000;">
                      <children>
                         <VBox fx:id="osBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #CD5C5C; -fx-border-color: #000000; -fx-border-width: 1;" visible="false">
                            <children>

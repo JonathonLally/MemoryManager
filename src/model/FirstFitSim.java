@@ -14,7 +14,7 @@ public class FirstFitSim extends MemSim {
         int size = insert.getpSize();
         ArrayList<Hole> holeList = findHoles();
 
-        for (Hole ho : holeList) {
+        for (Hole ho : holeList) {  //For all holes, if process fits in hole insert
             if (ho.getSize() >= insert.getpSize()) {
                 System.out.println("Proper Hole Found");
                 addToMemory(ho.getStart(), insert.getpSize(), insert.getmemID());
@@ -22,6 +22,7 @@ public class FirstFitSim extends MemSim {
                 insert.setEndLocation(ho.getStart() + insert.getpSize());
                 processList.add(insert);
                 System.out.println("Process added at " + insert.getStartLocation() + " with size of " + insert.getpSize());
+                freeMemory -= insert.getpSize();
                 break;
             }
             else {
@@ -29,7 +30,7 @@ public class FirstFitSim extends MemSim {
                 waitList.add(insert);
             }
         }
-        freeMemory -= insert.getpSize();
+
 
     }
 

@@ -1,5 +1,6 @@
 package model;
 
+//Used to mimic holes in memory
 public class Hole {
     private int size;
     private int start;

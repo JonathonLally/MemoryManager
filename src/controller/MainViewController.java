@@ -111,13 +111,18 @@ public class MainViewController {
             else {  //Passes Checks for invalid input, adds process by using MemSim.insertProcess()
                 memsim.insertProcess(new MemProcess(getProcessId_Add(), parsed));
                 String processId = getProcessId_Add();
-                swapLists(processId, 0);
-                swapComboBox(processId, 0);
-                updateStats((double)memsim.getFreeMemory());
-                processId = processId.replaceAll("\\D+","");
-                int tempInt = Integer.parseInt(processId);
-                updateVBoxs();
-                setOutputArea("Adding Process" + processId + " of size " + parsed);
+
+                //Checks if proper hole found and it was actually added
+                if (checkProcess(processId) == true) {
+                    swapLists(processId, 0);
+                    swapComboBox(processId, 0);
+                    updateStats((double)memsim.getFreeMemory());
+                    processId = processId.replaceAll("\\D+","");
+                    updateVBoxs();
+                    setOutputArea("Adding Process" + processId + " of size " + parsed);
+                } else {
+                    displayError("No Valid Memory Hole", "Compaction Recommended!");
+                }
             }
         } catch (NumberFormatException e) {
             displayError("Process Illegal Char", "Please use integers");
@@ -141,7 +146,7 @@ public class MainViewController {
             setOutputArea("Removing Process " + remove);
             updateStats((double)memsim.getFreeMemory());
         } catch (Exception e) {
-            displayError("Halp Process Remove", "No Process to be Removed");
+            displayError("Cannot Remove Process", "No Process to be Removed");
         }
 
     }
@@ -172,7 +177,6 @@ public class MainViewController {
             changeBoxSize(osBox, memsim.getOsSize());
             statsTotal.setText(String.valueOf(memsim.getTotalSize()) + "K");
             updateStats((double)memsim.getFreeMemory());
-            System.out.println(memsim.toString());
         } catch (Exception e) {
             displayError("Cannot Create New Memory Sim", "One Already Created");
         }
@@ -253,11 +257,9 @@ public class MainViewController {
                 p8Text.setText(String.valueOf(size));
                 break;
             default:
-                System.out.println("Error Switch Statement");
+                setOutputArea("Error Switch Statement");
                 break;
-
         }
-
     }
 
     @FXML   //Hides processes vboxes when they are removed
@@ -288,11 +290,9 @@ public class MainViewController {
                 p8Box.setVisible(false);
                 break;
             default:
-                System.out.println("Error Switch Statement");
+                setOutputArea("Error Switch Statement");
                 break;
-
         }
-
     }
 
     @FXML   //Resizes process Vbox scaled to Memory Size and GUI
@@ -503,5 +503,16 @@ public class MainViewController {
             addProcessComboBox.getSelectionModel().selectNext();
         else if (size != 1)
             removeProcessComboBox.getSelectionModel().selectNext();
+    }
+
+    //Checks if process was added to list, if not there wasn't a hole of proper size and returns false
+    private Boolean checkProcess(String check) {
+        check = check.replaceAll("\\D+","");
+        for (MemProcess mem : memsim.getProcessList()) {
+            if (check.equals(String.valueOf(mem.getmemID()))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
